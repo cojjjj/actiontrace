@@ -1,0 +1,24 @@
+# Deliberately insecure fixture. Do not copy into a live workflow.
+name: Insecure review automation
+on: pull_request_target
+permissions: write-all
+env:
+  REVIEW_TITLE: ${{ github.event.pull_request.title }}
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unsafe interpolation through an alias
+        env:
+          DISPLAY: ${{ env.REVIEW_TITLE }}
+        run: printf '%s\n' "${{ env.DISPLAY }}"
+      - name: Follow input into a local composite action
+        uses: ./.github/actions/annotate
+        with:
+          message: ${{ github.event.pull_request.body }}
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
+      - name: Execute repository-controlled build
+        run: npm test

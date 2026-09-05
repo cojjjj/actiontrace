@@ -1,0 +1,11 @@
+name: Insecure annotation example
+description: Deliberately insecure fixture for local composite input tracing
+inputs:
+  message:
+    description: Annotation text
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: echo "${{ inputs.message }}"

@@ -1,0 +1,12 @@
+name: Treat text as data
+on: pull_request_target
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print title as data
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$TITLE"
